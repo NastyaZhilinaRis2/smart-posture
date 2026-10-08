@@ -8,6 +8,8 @@
 # Prompt: "POST /settings — обновляет только те поля, которые пришли в запросе"
 # Prompt: "POST /calibrate — сохраняет текущее расстояние как правильное"
 
+# Prompt: "Перепиши эндпоинты так, чтобы состояние устройства читалось и писалось через get_state и update_state из базы данных, а не через глобальный словарь state"
+
 from datetime import datetime, date
 
 from fastapi import APIRouter
@@ -16,7 +18,8 @@ from app.database import SessionLocal
 from app.models import Measurement
 from app.schemas import Measure, Settings
 from app.services import (
-    state,
+    get_state,
+    update_state,
     get_setting,
     set_setting,
     check_posture,
@@ -33,16 +36,16 @@ def root():
 
 @router.post("/measure")
 def measure(data: Measure):
-    check_posture(data.distance)
-    state["distance"] = data.distance
-    state["last_update"] = datetime.now().isoformat()
-    save_measurement(data.distance, state["status"], state["last_update"])
-    return {"status": "ok", "current": state["status"]}
+    new_status = check_posture(data.distance)
+    now_str = datetime.now().isoformat()
+    update_state(distance=data.distance, last_update=now_str)
+    save_measurement(data.distance, new_status, now_str)
+    return {"status": "ok", "current": new_status}
 
 
 @router.get("/status")
 def status():
-    return state
+    return get_state()
 
 
 @router.get("/stats")
@@ -114,5 +117,6 @@ def update_settings(new: Settings):
 
 @router.post("/calibrate")
 def calibrate():
+    state = get_state()
     set_setting("calibrated", state["distance"])
     return {"status": "calibrated", "distance": state["distance"]}
