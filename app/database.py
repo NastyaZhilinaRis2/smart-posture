@@ -3,6 +3,7 @@
 # Prompt: "Добавь замену postgres:// на postgresql://, потому что Railway отдаёт старый формат"
 # Prompt: "Создай функцию get_db, которая открывает сессию и закрывает её после использования"
 
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
