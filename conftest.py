@@ -1,3 +1,6 @@
+# Prompt: "Помоги настроить pytest так, чтобы он видел модуль main из корня проекта"
+# Prompt: "Добавь корень проекта в sys.path"
+
 import sys
 import os
 

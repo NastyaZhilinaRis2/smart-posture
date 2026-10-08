@@ -1,3 +1,6 @@
+# Prompt: "Напиши тесты pytest для FastAPI-сервера"
+# Prompt: "Добавь проверки для всех эндпоинтов"
+
 import sys
 import os
 
