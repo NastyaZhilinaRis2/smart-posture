@@ -225,6 +225,7 @@ __marimo__/
 
 # База данных
 *.db
+test.db
 
 # Android
 android/.gradle/
